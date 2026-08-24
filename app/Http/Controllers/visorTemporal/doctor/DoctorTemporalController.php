@@ -18,19 +18,30 @@ class DoctorTemporalController extends Controller
     public function index()
     {
         //LISTA DE PACIENTES CON SUS CITAS MEDICAS    
-        $rango = Date("Y-m");
+        $rango = Date("Y-m-d");
         $appointments = Appointment::whereNotIn('estado_cita', [
             'PROGRAMADO',
             'CANCELADO',
             'NO_ASISTIO',
             'ATENDIDO',
         ])
-            ->orderBy('updated_at', 'DESC')
+            ->orderBy('hora_llegada', 'ASC')
             ->where('fecha_cita', 'LIKE', "%$rango%")->get();
-        //dd($appointments);
+
+
+        $atendidos = $appointments = Appointment::whereNotIn('estado_cita', [
+            'PROGRAMADO',
+            'CANCELADO',
+            'NO_ASISTIO',
+            'ATENDIDO',
+        ])
+            ->orderBy('hora_llegada', 'ASC')
+            ->where('estado_cita', 'ATENDIDO')
+            ->where('fecha_cita', 'LIKE', "%$rango%")->get();
 
         return view('visorTemporal.medico.index', [
-            'appointments' => $appointments
+            'appointments' => $appointments,
+            'atendidos' => $atendidos
         ]);
     }
 }

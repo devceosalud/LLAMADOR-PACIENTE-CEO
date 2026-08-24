@@ -1,7 +1,18 @@
 @forelse ($appointments as $appointment)
     @php
-        $tiempos = ['CX' => 20, 'consulta' => 20, 'dolor' => 20, 'examen' => 15, 'cambio' => 15];
-        $time = $tiempos[$appointment->motivo_consulta] ?? 15;
+        $estado_cita = [
+            'PROGRAMADO' => 'PROGRAMADO',
+            'CONFIRMADO' => 'CONFIRMADO',
+            'PACIENTE_LLEGO' => 'PACIENTE LLEGO',
+            'EN_ESPERA' => 'EN ESPERA',
+            'LLAMANDO' => 'LLAMANDO',
+            'EN_ATENCION' => 'EN ATENCION',
+            'ATENDIDO' => 'ATENDIDO',
+            'REEVALUACION' => 'REEVALUACION',
+            'CANCELADO' => 'CANCELADO',
+            'NO_ASISTIO' => 'NO ASISTIO',
+        ];
+        $estado = $estado_cita[$appointment->estado_cita] ?? 'SIN ESTADO';
 
         // Color de la pastilla según el estado (usa las clases .consultorio/.auxiliares/.espera del CSS)
         $pillClass = match ($appointment->estado_cita) {
@@ -9,32 +20,17 @@
             'LLAMANDO' => 'auxiliares',
             default => 'espera',
         };
-
-        // Hora de inicio según el estado, para el contador
-        $horaInicio = match ($appointment->estado_cita) {
-            'LLAMANDO' => $appointment->hora_llamado, //CAMPOS DE HORA DE LLAMADO
-            'EN_ATENCION' => $appointment->hora_llamado, //CAMPO DE HORA DE INCIO ATENCION: 'EN_ATENCION' => $appointment->hora_atencion
-            default => null,
-        };
     @endphp
+
+
     <div class="row {{ $appointment->estado_cita === 'EN_ATENCION' ? 'now' : '' }}">
-        <div class="ticket">{{ $appointment->id }}</div>
-        <div class="name">{{ $appointment->nombre }}</div>
+        <div class="name">{{ $appointment->nombre }} {{ $appointment->apellido_paterno }} </div>
         <div class="status">
             <span class="pill {{ $pillClass }}">
-                <span class="beat">{{ $appointment->estado_cita }}</span>
+                <span class="beat">{{ $estado }}</span>
             </span>
         </div>
-        <div class="wait">
-            <span class="num">{{ $time }} min</span>
-            @if ($horaInicio)
-                <span class="label contador" data-hora-llamado="{{ $horaInicio }}" data-tiempo="{{ $time }}">
-                    Cargando...
-                </span>
-            @else
-                <span class="label">{{ $appointment->estado_cita }}</span>
-            @endif
-        </div>
+        <div class="ticket">{{ $appointment->especialidad }}</div>
     </div>
 @empty
     <div class="empty">

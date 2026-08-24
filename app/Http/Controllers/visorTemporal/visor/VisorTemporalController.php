@@ -27,7 +27,9 @@ class VisorTemporalController extends Controller
             'CANCELADO',
             'NO_ASISTIO',
             'ATENDIDO',
-        ])->where('fecha_cita', 'LIKE', "%$rango%")->get();
+        ])
+            ->orderBy('hora_llamado', 'DESC')
+            ->where('fecha_cita', 'LIKE', "%$rango%")->get();
 
 
         // PACIENTE QUE SE ESTA LLAMANDO POR ESE ESTADO

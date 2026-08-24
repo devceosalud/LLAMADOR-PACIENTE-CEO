@@ -18,15 +18,15 @@ class AdmisionTemporalController extends Controller
     public function index()
     {
         //LISTA DE PACIENTES CON SUS CITAS MEDICAS    
-        $rango = Date("Y-m");
+        $rango = Date("Y-m-d");
         $appointments = Appointment::whereNotIn('estado_cita', [
             'CANCELADO',
             'NO_ASISTIO',
             'ATENDIDO',
         ])
-            ->orderBy('updated_at', 'DESC')
+            ->orderBy('hora_llegada', 'ASC')
             ->where('fecha_cita', 'LIKE', "%$rango%")->get();
-        //dd($appointments);
+
 
         return view('visorTemporal.admision.index', [
             'appointments' => $appointments
@@ -37,29 +37,43 @@ class AdmisionTemporalController extends Controller
     //ACTUALIZACION DEL BOTON "Llamar" PARA EL LLAMADO
     public function llamar(Request $request)
     {
-        if ($request->estado_cita == "EN_ATENCION") {
-            $appointment = Appointment::where('id', $request->id)
-                ->update([
-                    'estado_cita' => $request->estado_cita,
-                    'hora_llamado' => now()->addSeconds(2) //PARA DIFERENCIAR EL UTLIMO LLAMADO
-                ]);
-        }
-        $appointment = Appointment::where('id', $request->id)
-            ->update([
-                'estado_cita' => $request->estado_cita,
-                'updated_at' => now()->addSeconds(2) //PARA DIFERENCIAR EL UTLIMO LLAMADO
-            ]);
+        // 1. Mapeo de estados y sus respectivas columnas de tiempo
+        $columnasPorEstado = [
+            'PACIENTE_LLEGO' => ['hora_llegada'],
+            'EN_ATENCION'    => ['hora_atencion'],
+            'LLAMANDO'       => ['hora_llamado', 'updated_at'],
+            'ATENDIDO'       => ['hora_atendido'],
+        ];
 
-        if ($appointment || $appointment === 0) {
+        $estado = $request->estado_cita;
+
+        // 2. Validación: Si el estado no está en el mapa, termina temprano
+        if (!array_key_exists($estado, $columnasPorEstado)) {
+            return response()->json(['code' => 0, 'msg' => 'Estado de cita no válido']);
+        }
+
+        // 3. Preparar los datos para la actualización masiva
+        $datosActualizar = ['estado_cita' => $estado];
+        $tiempoSuma = now()->addSeconds(2);
+
+        foreach ($columnasPorEstado[$estado] as $columna) {
+            $datosActualizar[$columna] = $tiempoSuma;
+        }
+
+        // 4. Una única consulta a la base de datos
+        $actualizado = Appointment::where('id', $request->id)->update($datosActualizar);
+
+        // 5. Respuesta simplificada utilizando conversión booleana
+        if ($actualizado) {
             return response()->json([
                 'code' => 1,
-                'msg' => $request->estado_cita
+                'msg'  => $estado
             ]);
         }
 
         return response()->json([
             'code' => 0,
-            'msg' => 'No se pudo llamar'
+            'msg'  => 'No se encontró la cita o no hubo cambios'
         ]);
     }
 }

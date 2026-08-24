@@ -58,68 +58,11 @@ $(function () {
             }
 
             //ACTUALIZAR CONTADORES
-            actualizarContadores();
+            //actualizarContadores();
         }, 'json');
     }
 
-    //FUNCION CONTADOR
-    function actualizarContadores() {
-        $('.contador').each(function () {
-            let elemento = $(this);
-
-            let horaLlamado = elemento.data('hora-llamado'); //EXTRAE LA HORA DEL LLAMADO
-            let tiempoPermitido = parseInt(elemento.data('tiempo')); //EXTRAE EL TIEMPO DE MOTIVO (15 o 20)
-
-            if (!horaLlamado) {
-                return;
-            }
-
-            //CONVERTIMOS LA FECHA DE LARAVEL: [2026-08-07 15:11:06 => 2026-08-07T15:11:06]
-            let inicio = new Date(horaLlamado.replace(' ', 'T'));
-            let ahora = new Date();
-            console.log(ahora); //Fri Aug 14 2026 14:11:43 GMT-0500 (Peru Standard Time)
-
-            let transcurrido = Math.floor((ahora - inicio) / 1000); //SEGUNDOS TRANSCURRIDOS
-            let limite = tiempoPermitido * 60; //TIEMPO PERMITIDO EN SEGUNDOS
-            let restante = limite - transcurrido; //TIEMPO RESTANTE
-
-            if (restante > 0) {
-                let minutos = Math.floor(restante / 60);
-                let segundos = restante % 60; //936 ÷ 60 => 15 y sobra 36
-
-                elemento.text('Restante:' + minutos + 'min:' + String(segundos).padStart(2, '0'));
-
-                if (restante > 600) { //MAS DE 10 MINUTOS
-                    elemento.css({
-                        'background': 'blue',
-                        'color': 'white',
-                        'padding': '5px 12px',
-                        'border-radius': '10px',
-                    });
-                } else {
-                    //MENOS DE 10 MINUTOS
-                    elemento.css({
-                        'background': 'orange',
-                        'color': 'white',
-                        'padding': '5px 12px',
-                        'border-radius': '10px',
-                    });
-                }
-            } else {
-                let excedido = Math.abs(restante); //VALOR ABSOLUTO 
-                let minutos = Math.floor(excedido / 60);
-                let segundos = excedido % 60;
-
-                elemento.text('Excedido: ' + minutos + ':' + String(segundos).padStart(2, '0'));
-                elemento.css({
-                    'background': 'red',
-                    'color': 'white',
-                    'padding': '5px 12px',
-                    'border-radius': '10px',
-                });
-            }
-        })
-    }
+  
 
     //FUNCION HABLAR
     function hablar(texto) {

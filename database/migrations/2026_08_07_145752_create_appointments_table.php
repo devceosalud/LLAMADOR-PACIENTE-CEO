@@ -37,7 +37,10 @@ return new class extends Migration
 
             $table->date('fecha_cita')->nullable();
             $table->time('hora_cita')->nullable();
-            $table->timestamp('hora_llamado')->nullable();
+            $table->timestamp('hora_llegada')->nullable(); //cuando recepcion da click al boton
+            $table->timestamp('hora_llamado')->nullable(); //cuando medico llamada al paciente
+            $table->timestamp('hora_atencion')->nullable();//cuando medico da click a consultorio
+            $table->timestamp('hora_atendido')->nullable();//cuando medico da click a atentido
             $table->text('motivo_consulta')->nullable();
             $table->text('observaciones')->nullable();
             $table->date('fecha_registro')->nullable();

@@ -42,7 +42,7 @@ function actualizarBotonSonido() {
     } else {
         btn.classList.remove('on');
         btn.classList.add('off');
-        icon.textContent = '🔇';
+        icon.textContent = '';
         label.textContent = 'Activar llamado por voz';
     }
 }

@@ -27,7 +27,7 @@
         </svg>
 
         <div class="cols-head">
-            <span># Atención</span><span>Paciente</span><span>Estado</span><span>Espera aprox.</span>
+            <span>Paciente</span><span>Estado</span><span>Especialidad.</span>
         </div>
 
         <input type="hidden" name="count-appointment" id="count-appointment" value="1">

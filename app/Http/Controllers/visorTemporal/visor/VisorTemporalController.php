@@ -28,12 +28,12 @@ class VisorTemporalController extends Controller
             'NO_ASISTIO',
             'ATENDIDO',
         ])
-            ->orderBy('hora_llamado', 'DESC')
+            ->orderBy('hora_llegada', 'ASC')
             ->where('fecha_cita', 'LIKE', "%$rango%")->get();
 
 
         // PACIENTE QUE SE ESTA LLAMANDO POR ESE ESTADO
-        $llamando = Appointment::where('estado_cita', 'LLAMANDO')
+        $llamando = Appointment::whereIn('estado_cita', ['LLAMANDO','REEVALUACION']) //AGREGAR SI REEVALUACION SI QUIERES LLAMAR
             ->orderBy('appointments.updated_at', 'desc')
             ->first();
 

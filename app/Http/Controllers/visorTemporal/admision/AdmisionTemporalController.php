@@ -21,6 +21,7 @@ class AdmisionTemporalController extends Controller
         $rango = Date("Y-m-d");
         $appointments = Appointment::whereNotIn('estado_cita', [
             'CANCELADO',
+            'REEVALUACION',
             'NO_ASISTIO',
             'ATENDIDO',
         ])
@@ -28,8 +29,23 @@ class AdmisionTemporalController extends Controller
             ->where('fecha_cita', 'LIKE', "%$rango%")->get();
 
 
+        $atendidos = Appointment::whereIn('estado_cita', [
+            'ATENDIDO',
+        ])
+            ->orderBy('hora_llegada', 'ASC')
+            ->where('fecha_cita', 'LIKE', "%$rango%")->get();
+
+        $reevaluaciones = Appointment::whereIn('estado_cita', [
+            'REEVALUACION',
+        ])
+            ->orderBy('hora_llegada', 'ASC')
+            ->where('fecha_cita', 'LIKE', "%$rango%")->get();
+
+
         return view('visorTemporal.admision.index', [
-            'appointments' => $appointments
+            'appointments' => $appointments,
+            'atendidos' => $atendidos,
+            'reevaluaciones' => $reevaluaciones
         ]);
     }
 
@@ -37,33 +53,48 @@ class AdmisionTemporalController extends Controller
     //ACTUALIZACION DEL BOTON "Llamar" PARA EL LLAMADO
     public function llamar(Request $request)
     {
-        // 1. Mapeo de estados y sus respectivas columnas de tiempo
+        $esReevaluacion = Appointment::find($request->id);
+        if ($esReevaluacion && $esReevaluacion->estado_cita == 'REEVALUACION') { //PARA LLAMADOS DE REEVALUACIONES
+            if ($request->estado_cita == 'LLAMANDO') {
+                $esReevaluacion->update([
+                    'hora_llamado' => now()->addSeconds(2),
+                    'updated_at' => now()->addSeconds(2),
+                ]);
+            }
+            return response()->json([
+                'code' => 1,
+                'msg'  => $esReevaluacion->estado_cita
+            ]);
+        }
+
+        // ESTADOS DE LAS CITAS Y SUS TIEMPO POR ACTUALIZAR O ASIGNAR
         $columnasPorEstado = [
-            'PACIENTE_LLEGO' => ['hora_llegada'],
-            'EN_ATENCION'    => ['hora_atencion'],
-            'LLAMANDO'       => ['hora_llamado', 'updated_at'],
-            'ATENDIDO'       => ['hora_atendido'],
+            'PACIENTE_LLEGO' => ['hora_llegada'], //GUARDA FECHA Y HORA
+            'EN_ATENCION'    => ['hora_atencion'], //GUARDA FECHA Y HORA
+            'LLAMANDO'       => ['hora_llamado', 'updated_at'], //GUARDA FECHA Y HORA
+            'ATENDIDO'       => ['hora_atendido'], //GUARDA FECHA Y HORA
+            'REEVALUACION'   => ['updated_at'], //GUARDA FECHA Y HORA
         ];
 
         $estado = $request->estado_cita;
 
-        // 2. Validación: Si el estado no está en el mapa, termina temprano
+        // VALIDAMOS SI EL ESTADO ESTA EN EL MAPA, SI NO, DAMOS LA ALERTA
         if (!array_key_exists($estado, $columnasPorEstado)) {
             return response()->json(['code' => 0, 'msg' => 'Estado de cita no válido']);
         }
 
-        // 3. Preparar los datos para la actualización masiva
+        // PREPARAMOS LA ACTUALIZACION MASIVA POR ESTADO MANDADO POR EL FECTH
         $datosActualizar = ['estado_cita' => $estado];
         $tiempoSuma = now()->addSeconds(2);
 
-        foreach ($columnasPorEstado[$estado] as $columna) {
+        foreach ($columnasPorEstado[$estado] as $columna) { //RECORREMOS LA LISTA
             $datosActualizar[$columna] = $tiempoSuma;
         }
 
-        // 4. Una única consulta a la base de datos
+        // CONSULTA A LA BD CON LA LISTA
         $actualizado = Appointment::where('id', $request->id)->update($datosActualizar);
 
-        // 5. Respuesta simplificada utilizando conversión booleana
+        // MANDAMOS LA ALERTA SI SE ACTUALIZO CORRECTAMENTE
         if ($actualizado) {
             return response()->json([
                 'code' => 1,

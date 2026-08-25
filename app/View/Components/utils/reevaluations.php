@@ -4,7 +4,7 @@ namespace App\View\Components\utils;
 
 use Illuminate\View\Component;
 
-class attended extends Component
+class reevaluations extends Component
 {
     /**
      * Create a new component instance.
@@ -12,12 +12,12 @@ class attended extends Component
      * @return void
      */
 
-    public $atendidos;
+    public $reevaluaciones;
 
-    public function __construct($atendidos)
+    public function __construct($reevaluaciones)
     {
         //
-        $this->atendidos = $atendidos;
+        $this->reevaluaciones = $reevaluaciones;
     }
 
     /**
@@ -27,6 +27,6 @@ class attended extends Component
      */
     public function render()
     {
-        return view('components.utils.attended');
+        return view('components.utils.reevaluations');
     }
 }

@@ -22,6 +22,7 @@ class DoctorTemporalController extends Controller
         $appointments = Appointment::whereNotIn('estado_cita', [
             'PROGRAMADO',
             'CANCELADO',
+            'REEVALUACION',
             'NO_ASISTIO',
             'ATENDIDO',
         ])
@@ -29,19 +30,22 @@ class DoctorTemporalController extends Controller
             ->where('fecha_cita', 'LIKE', "%$rango%")->get();
 
 
-        $atendidos = $appointments = Appointment::whereNotIn('estado_cita', [
-            'PROGRAMADO',
-            'CANCELADO',
-            'NO_ASISTIO',
+        $atendidos = Appointment::whereIn('estado_cita', [
             'ATENDIDO',
         ])
             ->orderBy('hora_llegada', 'ASC')
-            ->where('estado_cita', 'ATENDIDO')
+            ->where('fecha_cita', 'LIKE', "%$rango%")->get();
+
+        $reevaluaciones = Appointment::whereIn('estado_cita', [
+            'REEVALUACION',
+        ])
+            ->orderBy('hora_llegada', 'ASC')
             ->where('fecha_cita', 'LIKE', "%$rango%")->get();
 
         return view('visorTemporal.medico.index', [
             'appointments' => $appointments,
-            'atendidos' => $atendidos
+            'atendidos' => $atendidos,
+            'reevaluaciones' => $reevaluaciones
         ]);
     }
 }

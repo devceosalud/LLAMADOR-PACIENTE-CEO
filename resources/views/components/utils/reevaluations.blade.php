@@ -1,6 +1,6 @@
 <div class="grid" id="container">
 
-    @foreach ($appointments as $index => $appointment)
+    @foreach ($reevaluaciones as $index => $appointment)
         @php
             $index = $index + 1;
             $estado_cita = [
@@ -26,6 +26,8 @@
                 'PACIENTE_LLEGO' => $appointment->hora_llegada, //CUANDO ADMISION DA CLICK A PACIENTE_LLEGO
                 'LLAMANDO' => $appointment->hora_llamado, //LLAMADO O RELLAMADO
                 'EN_ATENCION' => $appointment->hora_atencion, //CUANDO MEDICO DA CLICK A CONSULTORIO
+
+                'REEVALUACION' => $appointment->updated_at,
                 default => null,
             };
         @endphp
@@ -42,11 +44,11 @@
             </div>
 
             <div>
-                <span style="font-size:13px;"> {{ $appointment->motivo_consulta }} <strong
-                        class="num">({{ $time }} min)</strong></span>
+                <span style="font-size:13px;"> {{ $appointment->motivo_consulta }} </span>
             </div>
 
             <div class="wait">
+                <span class="num">{{ $time }} min</span>
                 @if ($horaInicio)
                     <span class="label contador" data-hora-llamado="{{ $horaInicio }}"
                         data-tiempo="{{ $time }}">

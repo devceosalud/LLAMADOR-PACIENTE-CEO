@@ -53,7 +53,7 @@ class AdmisionTemporalController extends Controller
     //ACTUALIZACION DEL BOTON "Llamar" PARA EL LLAMADO
     public function llamar(Request $request)
     {
-        $esReevaluacion = Appointment::find($request->id);
+        /*$esReevaluacion = Appointment::find($request->id);
         if ($esReevaluacion && $esReevaluacion->estado_cita == 'REEVALUACION') { //PARA LLAMADOS DE REEVALUACIONES
             if ($request->estado_cita == 'LLAMANDO') {
                 $esReevaluacion->update([
@@ -65,7 +65,7 @@ class AdmisionTemporalController extends Controller
                 'code' => 1,
                 'msg'  => $esReevaluacion->estado_cita
             ]);
-        }
+        }*/
 
         // ESTADOS DE LAS CITAS Y SUS TIEMPO POR ACTUALIZAR O ASIGNAR
         $columnasPorEstado = [

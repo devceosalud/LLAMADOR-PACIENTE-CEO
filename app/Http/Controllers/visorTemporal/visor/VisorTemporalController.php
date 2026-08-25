@@ -33,7 +33,7 @@ class VisorTemporalController extends Controller
 
 
         // PACIENTE QUE SE ESTA LLAMANDO POR ESE ESTADO
-        $llamando = Appointment::whereIn('estado_cita', ['LLAMANDO','REEVALUACION']) //AGREGAR SI REEVALUACION SI QUIERES LLAMAR
+        $llamando = Appointment::whereIn('estado_cita', ['LLAMANDO']) //AGREGAR REEVALUACION SI QUIERES LLAMAR
             ->orderBy('appointments.updated_at', 'desc')
             ->first();
 

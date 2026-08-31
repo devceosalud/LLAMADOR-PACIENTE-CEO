@@ -48,7 +48,6 @@
             </div>
 
             <div class="wait">
-                <span class="num">{{ $time }} min</span>
                 @if ($horaInicio)
                     <span class="label contador" data-hora-llamado="{{ $horaInicio }}"
                         data-tiempo="{{ $time }}">

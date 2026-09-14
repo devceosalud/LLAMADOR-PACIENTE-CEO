@@ -1,6 +1,6 @@
 <div class="grid" id="container">
 
-    
+
     @foreach ($appointments as $index => $appointment)
         @php
             $index = $index + 1;
@@ -99,7 +99,7 @@
             </div>
         </div>
     @endforeach
-    
+
     {{--
     @foreach ($appointments as $index => $appointment)
         @php
@@ -205,7 +205,7 @@
     @endforeach
     --}}
 
-    {{-- SIGUIENTES PACIENTES DEL DOCTOR }} 
+    {{-- SIGUIENTES PACIENTES DEL DOCTOR 
     <div class="card">
         <h3>Siguientes en Espera</h3>
         <ul class="patient-list">
@@ -219,6 +219,7 @@
             </li>
         </ul>
     </div>
+      SIGUIENTES PACIENTES DEL DOCTOR --}}
 
 
 </div>

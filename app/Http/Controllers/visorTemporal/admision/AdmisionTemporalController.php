@@ -19,14 +19,12 @@ class AdmisionTemporalController extends Controller
     {
         //LISTA DE PACIENTES CON SUS CITAS MEDICAS    
         $rango = Date("Y-m-d");
-
         $appointments = Appointment::whereNotIn('estado_cita', [
             'CANCELADO',
             'REEVALUACION',
             'NO_ASISTIO',
             'ATENDIDO',
         ])
-            ->orderByRaw('ISNULL(hora_llegada) ASC')
             ->orderBy('hora_llegada', 'ASC')
             ->where('fecha_cita', 'LIKE', "%$rango%")->get();
 
@@ -43,7 +41,7 @@ class AdmisionTemporalController extends Controller
             ->orderBy('hora_llegada', 'ASC')
             ->where('fecha_cita', 'LIKE', "%$rango%")->get();
 
-        //dd($appointments);
+
         return view('visorTemporal.admision.index', [
             'appointments' => $appointments,
             'atendidos' => $atendidos,

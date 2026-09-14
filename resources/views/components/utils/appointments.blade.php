@@ -1,6 +1,6 @@
 <div class="grid" id="container">
 
-    {{----}}
+    {{--
     @foreach ($appointments as $index => $appointment)
         @php
             $index = $index + 1;
@@ -65,7 +65,7 @@
             <div class="actions">
                 @if (auth()->user()->name === 'admision')
                     @if ($appointment->estado_cita == 'PROGRAMADO')
-                        {{-- DEBEMOS LLAMAR --}}
+                        {{-- DEBEMOS LLAMAR 
                         <button class="btn-sm btn-warning llamar-paciente" data-id="{{ $appointment->id }}"
                             data-estado="PACIENTE_LLEGO">
                             PACIENTE LLEGO</button>
@@ -81,7 +81,7 @@
                     @endif
                 @else
                     @if ($appointment->estado_cita == 'PROGRAMADO' || $appointment->estado_cita == 'PACIENTE_LLEGO')
-                        {{-- DEBEMOS LLAMAR --}}
+                        {{-- DEBEMOS LLAMAR 
                         <button class="btn-sm btn-warning llamar-paciente" data-id="{{ $appointment->id }}"
                             data-estado="LLAMANDO">▶
                             Consultorio</button>
@@ -99,8 +99,9 @@
             </div>
         </div>
     @endforeach
+    --}}
 
-    @foreach ($appointments as $index => $appointmenm)
+    @foreach ($appointments as $index => $appointment)
         @php
             $index = $index + 1;
             $estado_cita = [
@@ -182,7 +183,7 @@
                         @if ($appointment->estado_cita == 'PROGRAMADO' || $appointment->estado_cita == 'PACIENTE_LLEGO')
                             {{-- DEBEMOS LLAMAR --}}
                             <button class="btn btn-call paciente llamar-paciente" data-id="{{ $appointment->id }}"
-                                data-estado="LLAMANDO">🔔 LLAMAR --
+                                data-estado="LLAMANDO">🔔 LLAMAR
                                 PACIENTE</button>
                         @else
                             <button class="btn btn-call paciente llamar-paciente" data-id="{{ $appointment->id }}"

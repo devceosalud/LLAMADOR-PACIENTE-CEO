@@ -158,6 +158,7 @@
                 </div>
                 <div style="text-align: right;">
                     <strong>Fecha:</strong> 12/09/2026
+                    <a class="btn-sm btn-warning" href="{{ route('doctor.temporal.index') }}">Traer Datos</a>
                 </div>
             </div>
 

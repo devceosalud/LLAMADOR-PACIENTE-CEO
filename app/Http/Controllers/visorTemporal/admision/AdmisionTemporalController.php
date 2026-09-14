@@ -19,6 +19,7 @@ class AdmisionTemporalController extends Controller
     {
         //LISTA DE PACIENTES CON SUS CITAS MEDICAS    
         $rango = Date("Y-m-d");
+        dd($rango);
         $appointments = Appointment::whereNotIn('estado_cita', [
             'CANCELADO',
             'REEVALUACION',

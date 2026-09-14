@@ -153,8 +153,8 @@
         <div class="container">
             <div class="doctor-header">
                 <div>
-                    <h2>Dr. Alejandro Ruiz</h2>
-                    <p style="color: #6c757d;">Especialidad: Cardiología | Consultorio 04</p>
+                    <h2>Profesional de la Salud</h2>
+                    <p style="color: #6c757d;">Lista de atención</p>
                 </div>
                 <div style="text-align: right;">
                     <strong>Fecha:</strong> 12/09/2026

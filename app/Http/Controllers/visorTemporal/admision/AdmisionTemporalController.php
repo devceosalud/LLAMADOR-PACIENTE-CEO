@@ -26,6 +26,7 @@ class AdmisionTemporalController extends Controller
             'NO_ASISTIO',
             'ATENDIDO',
         ])
+            ->orderByRaw('ISNULL(hora_llegada) ASC')
             ->orderBy('hora_llegada', 'ASC')
             ->where('fecha_cita', 'LIKE', "%$rango%")->get();
 
@@ -42,7 +43,7 @@ class AdmisionTemporalController extends Controller
             ->orderBy('hora_llegada', 'ASC')
             ->where('fecha_cita', 'LIKE', "%$rango%")->get();
 
-        dd($appointments);
+        //dd($appointments);
         return view('visorTemporal.admision.index', [
             'appointments' => $appointments,
             'atendidos' => $atendidos,
